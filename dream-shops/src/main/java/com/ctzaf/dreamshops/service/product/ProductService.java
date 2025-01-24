@@ -1,6 +1,7 @@
 package com.ctzaf.dreamshops.service.product;
 
 import com.ctzaf.dreamshops.exceptions.ProductNotFoundException;
+import com.ctzaf.dreamshops.exceptions.ResourceNotFoundException;
 import com.ctzaf.dreamshops.model.Category;
 import com.ctzaf.dreamshops.model.Product;
 import com.ctzaf.dreamshops.repository.CategoryRepository;
@@ -50,14 +51,14 @@ public class ProductService implements IProductService {
     @Override
     public Product getProductById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
     @Override
     public void deleteProductById(Long id) {
         productRepository.findById(id)
                 .ifPresentOrElse(productRepository::delete,
-                        () -> {throw new ProductNotFoundException("Product not found");});
+                        () -> {throw new ResourceNotFoundException("Product not found");});
     }
 
     @Override
