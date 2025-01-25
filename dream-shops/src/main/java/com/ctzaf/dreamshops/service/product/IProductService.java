@@ -1,5 +1,6 @@
 package com.ctzaf.dreamshops.service.product;
 
+import com.ctzaf.dreamshops.dto.ProductDto;
 import com.ctzaf.dreamshops.model.Product;
 import com.ctzaf.dreamshops.request.AddProductRequest;
 import com.ctzaf.dreamshops.request.ProductUpdateRequest;
@@ -19,4 +20,7 @@ public interface IProductService {
     List<Product> getProductsByBrandAndName(String brand, String name);
     Long countProductsByBrandAndName(String brand, String name);
 
+    List<ProductDto> getConvertedProducts(List<Product> products);
+
+    ProductDto convertToDto(Product product);
 }
