@@ -39,7 +39,6 @@ public class ProductController {
         try {
             Product product = productService.getProductById(productId);
             ProductDto productDto = productService.convertToDto(product);
-
             return ResponseEntity.ok(new ApiResponse("Success!", productDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
@@ -50,7 +49,8 @@ public class ProductController {
     public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest product) {
         try {
             Product theProduct = productService.addProduct(product);
-            return ResponseEntity.ok(new ApiResponse("Add Product Success!", theProduct));
+            ProductDto productDto = productService.convertToDto(theProduct);
+            return ResponseEntity.ok(new ApiResponse("Add Product Success!", productDto));
         } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
         }
@@ -60,7 +60,8 @@ public class ProductController {
     public ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductUpdateRequest request, @PathVariable Long productId) {
         try {
             Product product = productService.updateProduct(request, productId);
-            return ResponseEntity.ok(new ApiResponse("Update Product Success!", product));
+            ProductDto productDto = productService.convertToDto(product);
+            return ResponseEntity.ok(new ApiResponse("Update Product Success!", productDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
