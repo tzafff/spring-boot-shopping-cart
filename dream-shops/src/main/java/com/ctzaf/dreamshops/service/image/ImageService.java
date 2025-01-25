@@ -62,14 +62,11 @@ public class ImageService implements IImageService {
                 imageDto.setDownloadUrl(savedImage.getDownloadUrl());
                 savedImageDto.add(imageDto);
 
-
             } catch (IOException | SQLException e) {
                 throw new RuntimeException(e.getMessage());
             }
-
-            return savedImageDto;
         }
-        return null;
+        return savedImageDto;
     }
 
     @Override
