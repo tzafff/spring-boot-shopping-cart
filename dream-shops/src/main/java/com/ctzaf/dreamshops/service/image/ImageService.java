@@ -23,11 +23,24 @@ public class ImageService implements IImageService {
     private final ImageRepository imageRepository;
     private final IProductService productService;
 
+    /**
+     * Finds an image by given id.
+     *
+     * @param id the id of the image to be found
+     * @return the image with given id
+     * @throws ResourceNotFoundException if image with given id is not found
+     */
     @Override
     public Image getImageById(Long id) {
         return imageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No Image not found with id: " + id));
     }
 
+    /**
+     * Deletes an image by given id.
+     *
+     * @param id the id of the image to be deleted
+     * @throws ResourceNotFoundException if image with given id is not found
+     */
     @Override
     public void deleteImageById(Long id) {
         imageRepository.findById(id)
@@ -36,6 +49,14 @@ public class ImageService implements IImageService {
                 });
     }
 
+    /**
+     * Saves the given list of images to the database and returns a list of dtos containing the saved images' ids, filenames and download urls.
+     *
+     * @param files the list of images to be saved
+     * @param productId the id of the product to which the images belong
+     * @return a list of dtos containing the saved images' ids, filenames and download urls
+     * @throws ResourceNotFoundException if no product with given id is found
+     */
     @Override
     public List<ImageDto> saveImages(List<MultipartFile> files, Long productId) {
         Product product = productService.getProductById(productId);
@@ -69,6 +90,13 @@ public class ImageService implements IImageService {
         return savedImageDto;
     }
 
+    /**
+     * Updates the image with the given id by replacing its file with the given new file.
+     *
+     * @param file the new image file
+     * @param imageId the id of the image to be updated
+     * @throws ResourceNotFoundException if no image with given id is found
+     */
     @Override
     public void updateImage(MultipartFile file, Long imageId) {
         Image image = getImageById(imageId);
