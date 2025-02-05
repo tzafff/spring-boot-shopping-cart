@@ -4,6 +4,7 @@ import com.ctzaf.dreamshops.exceptions.ResourceNotFoundException;
 import com.ctzaf.dreamshops.model.Cart;
 import com.ctzaf.dreamshops.repository.CartItemRepository;
 import com.ctzaf.dreamshops.repository.CartRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,7 @@ public class CartService implements ICartService {
      * @param id the id of the cart to be cleared
      * @throws ResourceNotFoundException if no cart is found with the given id
      */
+    @Transactional
     @Override
     public void clearCart(Long id) {
         Cart cart = getCart(id);
