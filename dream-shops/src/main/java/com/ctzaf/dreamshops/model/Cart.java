@@ -41,7 +41,7 @@ public class Cart {
      * Recalculates the total amount of the cart by summing up the price of each item in the cart.
      * If an item does not have a unit price, it is ignored.
      */
-    public void updateTotalAmount() {
+    private void updateTotalAmount() {
         this.totalAmount = items.stream().map(item -> {
             BigDecimal unitPrice = item.getUnitPrice();
             if(unitPrice == null) {
