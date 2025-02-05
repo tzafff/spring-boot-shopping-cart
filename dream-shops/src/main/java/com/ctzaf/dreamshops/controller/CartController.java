@@ -19,6 +19,13 @@ public class CartController {
 
     private final ICartService cartService;
 
+    /**
+     * Gets the cart with the given id.
+     *
+     * @param cartId the id of the cart to be retrieved
+     * @return the cart with the given id
+     * @throws ResourceNotFoundException if no cart is found with the given id
+     */
     @GetMapping("/{cartId}/my-cart")
     public ResponseEntity<ApiResponse> getCart(@PathVariable Long cartId) {
         try {
@@ -29,6 +36,13 @@ public class CartController {
         }
     }
 
+    /**
+     * Deletes all items from the cart with the given id.
+     *
+     * @param cartId the id of the cart to be cleared
+     * @return a response with a success message if the cart is cleared successfully
+     * @throws ResourceNotFoundException if no cart is found with the given id
+     */
     @DeleteMapping("/{cartId}/clear")
     public ResponseEntity<ApiResponse> clearCart(@PathVariable Long cartId) {
         try {
@@ -39,6 +53,13 @@ public class CartController {
         }
     }
 
+/**
+ * Retrieves the total price of all items in the cart with the given id.
+ *
+ * @param cartId the id of the cart to get the total price of
+ * @return a response containing the total price of all items in the cart
+ * @throws ResourceNotFoundException if no cart is found with the given id
+ */
     @GetMapping("/{cartId}/cart/total-price")
     public ResponseEntity<ApiResponse> getTotalAmount(@PathVariable Long cartId) {
         try {

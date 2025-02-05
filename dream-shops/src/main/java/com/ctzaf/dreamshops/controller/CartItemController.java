@@ -4,6 +4,7 @@ package com.ctzaf.dreamshops.controller;
 import com.ctzaf.dreamshops.exceptions.ResourceNotFoundException;
 import com.ctzaf.dreamshops.response.ApiResponse;
 import com.ctzaf.dreamshops.service.cart.ICartItemService;
+import com.ctzaf.dreamshops.service.cart.ICartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +17,27 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class CartItemController {
 
     private final ICartItemService cartItemService;
+    private final ICartService cartService;
 
+/**
+ * Adds an item to the cart. If the cart does not exist, a new cart is initialized.
+ *
+ * @param cartId the id of the cart to which the item is to be added; if null, a new cart is initialized
+ * @param productId the id of the product to be added to the cart
+ * @param quantity the quantity of the product to be added
+ * @return a ResponseEntity with a status of 200 and a body of ApiResponse containing the message "Add Item Success"
+ * if the addition was successful, otherwise a ResponseEntity with a status of 404 and a body of ApiResponse containing
+ * the message from ResourceNotFoundException if the product could not be found
+ */
     @PostMapping("/item/add")
-    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam Long cartId,
+    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam(required = false) Long cartId,
                                                      @RequestParam Long productId,
                                                      @RequestParam Integer quantity) {
         try {
+            if(cartId == null) {
+                cartId = cartService.initializeNewCart();
+            }
+
             cartItemService.addItemToCart(cartId, productId, quantity);
             return ResponseEntity.ok(new ApiResponse("Add Item Success", null));
         } catch (ResourceNotFoundException e) {
@@ -29,6 +45,16 @@ public class CartItemController {
         }
     }
 
+/**
+ * Removes a specific item from the cart.
+ *
+ * @param cartId the id of the cart from which the item is to be removed
+ * @param itemId the id of the item to be removed
+ * @return a ResponseEntity with a status of 200 and a body of ApiResponse containing
+ * the message "Remove Item Success" if the removal was successful, otherwise a
+ * ResponseEntity with a status of 404 and a body of ApiResponse containing the
+ * message from ResourceNotFoundException if the item could not be found
+ */
     @DeleteMapping("/cart/{cartId}/item/{itemId}/remove")
     public ResponseEntity<ApiResponse> removeItemFromCart(@PathVariable Long cartId,
                                                           @PathVariable Long itemId) {
@@ -40,6 +66,16 @@ public class CartItemController {
         }
     }
 
+    /**
+     * Updates the quantity of a specific item in the cart.
+     *
+     * @param cartId the id of the cart to update the item in
+     * @param itemId the id of the item to update the quantity of
+     * @param quantity the new quantity of the item
+     * @return a ResponseEntity with a status of 200 and a body of ApiResponse containing the message "Update Quantity Success"
+     * if the update was successful, otherwise a ResponseEntity with a status of 404 and a body of ApiResponse containing the
+     * message "Item Not Found!" if the item could not be found in the cart
+     */
     @PutMapping("/cart/{cartId}/item/{itemId}/update")
     public ResponseEntity<ApiResponse> updateItemQuantity(@PathVariable Long cartId,
                                                           @PathVariable Long itemId,
