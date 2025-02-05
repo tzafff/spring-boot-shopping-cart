@@ -62,7 +62,7 @@ public class CartItemService implements ICartItemService {
         Cart cart = cartService.getCart(cartId);
         cart.getItems()
                 .stream()
-                .filter(item -> item.getCart().getId().equals(cartId))
+                .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst()
                 .ifPresent(item -> {
                     item.setQuantity(quantity);
