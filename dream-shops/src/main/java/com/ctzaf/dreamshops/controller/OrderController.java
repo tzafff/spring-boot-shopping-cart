@@ -1,5 +1,6 @@
 package com.ctzaf.dreamshops.controller;
 
+import com.ctzaf.dreamshops.dto.OrderDto;
 import com.ctzaf.dreamshops.exceptions.ResourceNotFoundException;
 import com.ctzaf.dreamshops.model.Order;
 import com.ctzaf.dreamshops.response.ApiResponse;
@@ -31,9 +32,9 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}/order")
-    public ResponseEntity<ApiResponse> getUserOrders(@PathVariable Long orderId) {
+    public ResponseEntity<ApiResponse> getOrderById(@PathVariable Long orderId) {
         try {
-            Order order = orderService.getOrder(orderId);
+            OrderDto order = orderService.getOrder(orderId);
             return ResponseEntity.ok(new ApiResponse("Found!", order));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Oops!", e.getMessage()));
@@ -42,9 +43,9 @@ public class OrderController {
 
 
     @GetMapping("/{userId}/orders")
-    public ResponseEntity<ApiResponse> getOrderById(@PathVariable Long userId) {
+    public ResponseEntity<ApiResponse> getUserOrders(@PathVariable Long userId) {
         try {
-            List<Order> orders = orderService.getUserOrders(userId);
+            List<OrderDto> orders = orderService.getUserOrders(userId);
             return ResponseEntity.ok(new ApiResponse("Found!", orders));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Oops!", e.getMessage()));
