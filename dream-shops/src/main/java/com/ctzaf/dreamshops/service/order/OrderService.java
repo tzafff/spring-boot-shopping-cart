@@ -8,11 +8,13 @@ import com.ctzaf.dreamshops.model.OrderItem;
 import com.ctzaf.dreamshops.model.Product;
 import com.ctzaf.dreamshops.repository.OrderRepository;
 import com.ctzaf.dreamshops.repository.ProductRepository;
+import com.ctzaf.dreamshops.service.cart.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -21,10 +23,21 @@ public class OrderService implements IOrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final CartService cartService;
 
     @Override
     public Order placeOrder(Long userId) {
-        return null;
+        Cart cart = cartService.getCartByUserId(userId);
+        Order order = createOrder(cart);
+        List<OrderItem> orderItems = createOrderItems(order, cart);
+
+        order.setOrderItems(new HashSet<>(orderItems));
+        order.setTotalAmount(calculateTotalAmount(orderItems));
+        Order savedOrder = orderRepository.save(order);
+        // After complete of the order clear the Cart
+        cartService.clearCart(cart.getId());
+
+        return savedOrder;
     }
 
     @Override
@@ -33,9 +46,14 @@ public class OrderService implements IOrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found!"));
     }
 
+    @Override
+    public List<Order> getUserOrders(Long userId) {
+        return orderRepository.findByUserId(userId);
+    }
+
     private Order createOrder(Cart cart) {
         Order order = new Order();
-        // TODO set the user
+        order.setUser(cart.getUser());
         order.setOrderStatus(OrderStatus.PENDING);
         order.setOrderDate(LocalDate.now());
         return order;
