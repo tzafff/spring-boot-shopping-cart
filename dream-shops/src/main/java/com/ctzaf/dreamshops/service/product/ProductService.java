@@ -2,6 +2,7 @@ package com.ctzaf.dreamshops.service.product;
 
 import com.ctzaf.dreamshops.dto.ImageDto;
 import com.ctzaf.dreamshops.dto.ProductDto;
+import com.ctzaf.dreamshops.exceptions.AlreadyExistsException;
 import com.ctzaf.dreamshops.exceptions.ProductNotFoundException;
 import com.ctzaf.dreamshops.exceptions.ResourceNotFoundException;
 import com.ctzaf.dreamshops.model.Category;
@@ -41,6 +42,10 @@ public class ProductService implements IProductService {
         // If No, then save it as a new category.
         // Then set as the new product category.
 
+        if(productExists(request.getName(), request.getBrand())) {
+            throw new AlreadyExistsException(request.getBrand()+" "+request.getName()+" already exists, you may update this product instead!");
+        }
+
         Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(() -> {
                     Category newCategory = new Category(request.getCategory().getName());
@@ -49,6 +54,11 @@ public class ProductService implements IProductService {
         request.setCategory(category);
         return productRepository.save(createProduct(request, category));
     }
+
+    private boolean productExists(String name, String brand) {
+        return productRepository.existsByNameAndBrand(name, brand);
+    }
+
 
     /**
      * Create a new product object given a request and a category.
