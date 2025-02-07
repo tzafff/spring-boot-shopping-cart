@@ -26,7 +26,6 @@ public class CartItemController {
 /**
  * Adds an item to the cart. If the cart does not exist, a new cart is initialized.
  *
- * @param cartId the id of the cart to which the item is to be added; if null, a new cart is initialized
  * @param productId the id of the product to be added to the cart
  * @param quantity the quantity of the product to be added
  * @return a ResponseEntity with a status of 200 and a body of ApiResponse containing the message "Add Item Success"
@@ -38,7 +37,7 @@ public class CartItemController {
                                                      @RequestParam Long productId,
                                                      @RequestParam Integer quantity) {
         try {
-            User user = userService.getUserById(1L);
+            User user = userService.getUserById(4L);
             Cart cart = cartService.initializeNewCart(user);
 
             cartItemService.addItemToCart(cart.getId(), productId, quantity);
