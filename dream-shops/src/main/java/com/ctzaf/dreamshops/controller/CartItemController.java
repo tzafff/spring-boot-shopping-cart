@@ -2,9 +2,12 @@ package com.ctzaf.dreamshops.controller;
 
 
 import com.ctzaf.dreamshops.exceptions.ResourceNotFoundException;
+import com.ctzaf.dreamshops.model.Cart;
+import com.ctzaf.dreamshops.model.User;
 import com.ctzaf.dreamshops.response.ApiResponse;
 import com.ctzaf.dreamshops.service.cart.ICartItemService;
 import com.ctzaf.dreamshops.service.cart.ICartService;
+import com.ctzaf.dreamshops.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,7 @@ public class CartItemController {
 
     private final ICartItemService cartItemService;
     private final ICartService cartService;
+    private final IUserService userService;
 
 /**
  * Adds an item to the cart. If the cart does not exist, a new cart is initialized.
@@ -30,15 +34,14 @@ public class CartItemController {
  * the message from ResourceNotFoundException if the product could not be found
  */
     @PostMapping("/item/add")
-    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam(required = false) Long cartId,
+    public ResponseEntity<ApiResponse> addItemToCart(
                                                      @RequestParam Long productId,
                                                      @RequestParam Integer quantity) {
         try {
-            if(cartId == null) {
-                cartId = cartService.initializeNewCart();
-            }
+            User user = userService.getUserById(1L);
+            Cart cart = cartService.initializeNewCart(user);
 
-            cartItemService.addItemToCart(cartId, productId, quantity);
+            cartItemService.addItemToCart(cart.getId(), productId, quantity);
             return ResponseEntity.ok(new ApiResponse("Add Item Success", null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
