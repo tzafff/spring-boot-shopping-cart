@@ -1,4 +1,4 @@
-package com.ctzaf.dreamshops.config;
+package com.ctzaf.dreamshops.security.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
