@@ -4,6 +4,7 @@ import com.ctzaf.dreamshops.model.Role;
 import com.ctzaf.dreamshops.model.User;
 import com.ctzaf.dreamshops.repository.RoleRepository;
 import com.ctzaf.dreamshops.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+@Transactional
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements ApplicationListener<ApplicationReadyEvent> {
@@ -22,9 +24,9 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         Set<String> defaultRoles =  Set.of("ROLE_ADMIN", "ROLE_USER");
-        //createDefaultUserIfNotExists();
+        createDefaultUserIfNotExists();
         createDefaultRoleIfNotExits(defaultRoles);
-        //createDefaultAdminIfNotExits();
+        createDefaultAdminIfNotExits();
     }
 
     private void createDefaultUserIfNotExists() {
